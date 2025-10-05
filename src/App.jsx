@@ -3,19 +3,46 @@ import { useState } from 'react'
 import './App.css'
 import Navbar from './components/Navbar'
 import { languages } from './languages'
+import clsx from 'clsx'
 
 function App() {
+//state values
+const [currentWord,setCurrentWord]=useState('react')
+const [guessLetter,setGuessLetter]=useState([])
+ //derived values
 
-const [currentWord,setCurrentWord]=useState('React')
-
+const wrongGuessedArray=guessLetter.filter(letter=>!currentWord.includes(letter))
+console.log(wrongGuessedArray);
 
 const alphabet='abcdefghijklmnopqrstuvwxyz'
 
-const letterElements=
-      alphabet.split('').map((letter,i)=>
-     <p className='w-9 h-9 flex justify-center items-center
-    bg-[#FCBA29] text-xl text-black  cursor-pointer   rounded border border-[#D7D7D7] ' key={i}>{letter.toUpperCase()}</p>)
 
+function addGuessedLetter(letter){
+setGuessLetter(prevLetters=>
+    prevLetters.includes(letter)?prevLetters:
+    [...prevLetters,letter])
+}
+
+//key board 
+const letterElements=
+      alphabet.split('').map((letter,i)=> {
+        const isGuessed=guessLetter.includes(letter)
+        const isCorrect=isGuessed && currentWord.includes(letter)
+        const isWrong=isGuessed && !currentWord.includes(letter)
+        const className=clsx({
+          correct: isCorrect,
+          wrong: isWrong
+        })
+      return (
+     <button 
+      onClick={()=>addGuessedLetter(letter)}
+      className={`${className} w-9 h-9 flex justify-center items-center
+    bg-[#FCBA29] text-xl text-black  cursor-pointer   
+    rounded border border-[#D7D7D7] `}
+     key={i}>{letter.toUpperCase()}</button>
+   )
+   } )
+     
 
 const languageElements=
   languages.map(lang=>{
@@ -33,7 +60,7 @@ const languageElements=
      .split('').map((letter,index)=>
   <p className='w-10 h-10 flex justify-center items-center
     bg-[#323232] text-xl border-b border-b-[#F9F4DA] '
-     key={index}>{letter.toUpperCase()}</p>)
+     key={index}>{ guessLetter.includes(letter)? letter.toUpperCase():""}</p>)
 
   return (
     <>

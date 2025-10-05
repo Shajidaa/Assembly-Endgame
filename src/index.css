@@ -32,3 +32,12 @@ header>p {
     text-align: center;
     margin: 0 auto;
 }
+
+.correct {
+    background-color: green;
+
+}
+
+.wrong {
+    background-color: red;
+}
